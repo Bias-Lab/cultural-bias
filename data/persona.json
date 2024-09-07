@@ -1,0 +1,42 @@
+{
+  "Age": ["Young", "Old"],
+  "Education": [
+    "Bachelor’s Degree",
+    "High School Graduate",
+    "Associate Degree",
+    "Doctoral Degree",
+    "Less than High School"
+  ],
+  "Gender": [
+    "Woman",
+    "Man",
+    "Transgender Woman",
+    "Transgender Man",
+    "Non-binary"
+  ],
+  "Occupation": ["Cleaner", "Doctor", "Taxi Driver", "Security Guard"],
+  "Physical Appearance": [
+    "Attractive",
+    "Thin",
+    "Light-skinned",
+    "Dark-skinned",
+    "Unattractive",
+    "Fat"
+  ],
+  "Physical Attributes": ["Able-bodied", "Physically-disabled"],
+  "Race": ["Black", "White"],
+  "Social Class": [
+    "Middle-Class",
+    "High-Income",
+    "Upper-Class",
+    "Lower-Class",
+    "Low-Income"
+  ],
+  "Travel and Culture": [
+    "Culturally Aware",
+    "Travel Expert",
+    "Well-Traveled",
+    "Global Nomad",
+    "Globetrotter"
+  ]
+}
