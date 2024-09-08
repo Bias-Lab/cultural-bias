@@ -4,11 +4,9 @@ import json
 import os
 import csv
 from tqdm import tqdm
-
 from dotenv import load_dotenv
-
 from api.remote import generate_response_api
-from api.local import generate_response_local
+from api.local import generate_response_local_parallel
 from prompt import prompt_template
 
 load_dotenv()
@@ -21,30 +19,38 @@ args = parser.parse_args()
 model = os.environ['MODEL']
 
 dataset_path = 'data/raw_data.csv'
-
-dataset = pd.read_csv(dataset_path)
-
 personalities_path = 'data/persona.json'
+
 personalities = []
 for personas in json.load(open(personalities_path)).values():
     personalities.extend(personas)
 
+def batch(iterable, n=1):
+    l = len(iterable)
+    for ndx in range(0, l, n):
+        yield iterable[ndx:min(ndx + n, l)]
+
 for persona_index in range(3):
+    dataset = pd.read_csv(dataset_path)
+
     for col, data in tqdm(dataset.iterrows(), total=len(dataset), desc="Processing"):
+        queries = []
         for persona in personalities:
             query = prompt_template.create_prompt(data['country'], data['story'], persona_index, persona)
+            queries.append((col, persona, query))
 
-            try: 
-                if args.mode == 'local':
-                    response = generate_response_local(model, query, max_tokens=10)
-                else:
-                    response = generate_response_api(model, query, max_tokens=10)
+        for query_batch in batch(queries, 4):
+            if args.mode == 'local':
+                results = generate_response_local_parallel(model, [q[2] for q in query_batch], temperature=0.5, max_tokens=10, max_workers=4)
+            else:
+                results = [(q[2], generate_response_api(model, q[2], max_tokens=10)) for q in query_batch]
 
-                dataset.loc[col, persona] = response.lower()
-
-            except Exception as e:
-                print("An error occurred", e)
-                dataset.loc[col, persona] = "error"
+            for (col, persona, _), (_, result) in zip(query_batch, results):
+                try:
+                    dataset.loc[col, persona] = result.lower()
+                except Exception as e:
+                    print("An error occurred", e)
+                    dataset.loc[col, persona] = "error"
 
     if not os.path.exists('results'):
         os.makedirs('results')
