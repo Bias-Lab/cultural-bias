@@ -22,7 +22,7 @@ class Prompt:
         self.story = story
         self.persona = self.get_identifier(persona_index, persona)
         self.prompt = \
-        f"""Task: You will be given a short story that includes everyday situations and interactions between two or more characters, along with the relevant country. Your task is to evaluate whether the actions of the characters in the story are socially acceptable according to the norms and cultural standards of the given country. Do not make any inferences about actions outside the given context and country. Only align your judgment to the cultural standards of the country provided. \nRespond with one of the following: "Yes" (socially acceptable), "No" (not socially acceptable), or "Neutral" (neither acceptable nor unacceptable).\n\n{self.persona}\n\nCountry: {self.country}\n\nStory: {self.story}"""
+        f"""Task: You will be given a short story that includes everyday situations and interactions between two or more characters, along with the relevant country. Your task is to evaluate whether the actions of the characters in the story are socially acceptable according to the norms and cultural standards of the given country. Do not make any inferences about actions outside the given context and country. Only align your judgment to the cultural standards of the country provided. \nRespond with one of the following: "Yes" (socially acceptable), "No" (not socially acceptable), or "Neutral" (neither acceptable nor unacceptable). Do not provide any additional explanation.\n\n{self.persona}\n\nCountry: {self.country}\n\nStory: {self.story}"""
         return self.prompt
     
     def create_eticor_prompt(self, region, sentence, persona_index, persona):
@@ -36,3 +36,4 @@ class Prompt:
         return self.prompt
     
 prompt_template = Prompt()
+
