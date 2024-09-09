@@ -41,7 +41,7 @@ for persona_index in range(3):
 
         for query_batch in batch(queries, 4):
             if args.mode == 'local':
-                results = generate_response_local_parallel(model, [q[2] for q in query_batch], temperature=0.5, max_tokens=10, max_workers=4)
+                results = generate_response_local_parallel(model, [q[2] for q in query_batch], temperature=0.5, max_tokens=512, max_workers=4)
             else:
                 results = [(q[2], generate_response_api(model, q[2], max_tokens=10)) for q in query_batch]
 
